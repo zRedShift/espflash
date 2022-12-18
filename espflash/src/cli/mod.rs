@@ -258,7 +258,7 @@ pub fn connect(args: &ConnectArgs, config: &Config) -> Result<Flasher> {
             debug!("Matched `SerialPortType::PciPort or ::Unknown`");
             UsbPortInfo {
                 vid: 0,
-                pid: 0,
+                pid: crate::connection::USB_SERIAL_JTAG_PID,
                 serial_number: None,
                 manufacturer: None,
                 product: None,

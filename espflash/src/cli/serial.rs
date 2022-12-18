@@ -3,12 +3,11 @@ use std::fs;
 
 use crossterm::style::Stylize;
 use dialoguer::{theme::ColorfulTheme, Confirm, Select};
-use log::{error, info};
+use log::{debug, error, info};
 use miette::{IntoDiagnostic, Result};
 use serialport::{available_ports, SerialPortInfo, SerialPortType, UsbPortInfo};
 
 use super::{config::Config, ConnectArgs};
-use crate::connection::USB_SERIAL_JTAG_PID;
 use crate::{cli::config::UsbDevice, error::Error};
 
 pub fn get_serial_port_info(
@@ -96,6 +95,7 @@ fn detect_usb_serial_ports() -> Result<Vec<SerialPortInfo>> {
     };
 
     let ports = available_ports().into_diagnostic()?;
+    debug!("{ports:?}");
     let ports = ports
         .into_iter()
         .filter_map(|port_info| {
@@ -146,6 +146,7 @@ fn detect_usb_serial_ports() -> Result<Vec<SerialPortInfo>> {
 #[cfg(not(all(target_os = "linux", target_env = "musl")))]
 fn detect_usb_serial_ports() -> Result<Vec<SerialPortInfo>> {
     let ports = available_ports().into_diagnostic()?;
+    debug!("{ports:?}");
     let ports = ports
         .into_iter()
         .filter(|port_info| {
@@ -160,7 +161,7 @@ fn detect_usb_serial_ports() -> Result<Vec<SerialPortInfo>> {
             )
         })
         .collect::<Vec<_>>();
-
+    debug!("{ports:?}");
     Ok(ports)
 }
 
@@ -241,7 +242,7 @@ fn select_serial_port(
             SerialPortType::UsbPort(info) => info,
             SerialPortType::PciPort | SerialPortType::Unknown => &UsbPortInfo {
                 vid: 0,
-                pid: USB_SERIAL_JTAG_PID,
+                pid: crate::connection::USB_SERIAL_JTAG_PID,
                 serial_number: None,
                 manufacturer: None,
                 product: None,

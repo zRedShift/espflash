@@ -262,6 +262,7 @@ pub fn connect(args: &ConnectArgs, config: &Config) -> Result<Flasher> {
                 serial_number: None,
                 manufacturer: None,
                 product: None,
+                interface: None,
             }
         }
         _ => unreachable!(),

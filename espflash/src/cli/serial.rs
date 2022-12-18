@@ -246,6 +246,7 @@ fn select_serial_port(
                 serial_number: None,
                 manufacturer: None,
                 product: None,
+                interface: None,
             },
             _ => unreachable!(),
         };
